@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/anon-dc/VoxRelay/main/docs/banner.svg" alt="VoxRelay" width="820">
+<img src="https://github.com/anon-dc/VoxRelay/blob/8e138dafd57bcc3ed0cf769a075105b09af9fc98/main/docs/voxrelay-banner.png" alt="VoxRelay" width="820">
 
 <br><br>
 
