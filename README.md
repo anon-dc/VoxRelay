@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://github.com/anon-dc/VoxRelay/main/docs/banner.svg" alt="VoxRelay" width="820">
+<img src="https://raw.githubusercontent.com/anon-dc/voxrelay/main/docs/banner.svg" alt="VoxRelay" width="820">
 
 <br><br>
 
@@ -24,7 +24,6 @@
 <img src="https://img.shields.io/badge/Twilio-Voice-F22F46?style=for-the-badge&logo=twilio&logoColor=white" alt="Twilio">
 <img src="https://img.shields.io/badge/Telegram-Bot-26A5E4?style=for-the-badge&logo=telegram&logoColor=white" alt="Telegram">
 <img src="https://img.shields.io/badge/SQLite-WAL-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
-<img src="https://img.shields.io/badge/AMD-Enabled-4f8ef7?style=for-the-badge&logo=twilio&logoColor=white" alt="AMD Enabled">
 
 <br><br>
 
@@ -34,8 +33,7 @@
 
 <p>
 Build, manage and monitor consent-based voice and messaging workflows
-from a centralized Telegram interface — with live operator approval,
-Answering Machine Detection, and full audit trails.
+from a centralized Telegram interface.
 </p>
 
 <p>
@@ -58,28 +56,23 @@ Answering Machine Detection, and full audit trails.
 
 ## Overview
 
-**VoxRelay** is a Flask-based communications automation platform that connects
-Telegram-based operator workflows with programmable voice and messaging
-services.
+**VoxRelay** is a Flask-based communications automation platform designed to connect Telegram-based operator workflows with programmable voice and messaging services.
 
 It provides a centralized interface for:
 
-- Outbound voice workflows
-- Programmable IVR menus
-- Live call status monitoring (ringing, answered, voicemail, ended)
-- DTMF event handling with per-keystroke Telegram notifications
-- Live **Approve / Reject** verification holds
-- Answering Machine Detection (AMD) for verify/security scripts
-- SMS delivery through Telnyx, MSG91, and GTX
-- Template-based call scripts with placeholder substitution
-- Operator approval workflows
-- Campaign history and recording metadata
-- Administrative controls
-- Health monitoring
+* Outbound voice workflows
+* IVR menus
+* Call status monitoring
+* DTMF event handling
+* SMS delivery
+* Template-based call scripts
+* Operator approval workflows
+* Campaign history
+* Recording metadata
+* Administrative controls
+* Health monitoring
 
-VoxRelay is designed for **authorized, consent-based communications**.
-Operators are responsible for complying with applicable telecommunications,
-privacy, recording-consent, anti-spam and data-protection requirements.
+VoxRelay is designed for **authorized, consent-based communications**. Operators are responsible for complying with applicable telecommunications, privacy, recording-consent, anti-spam and data-protection requirements.
 
 ---
 
@@ -91,31 +84,38 @@ privacy, recording-consent, anti-spam and data-protection requirements.
 
 ### Voice Automation
 
-- Initiate outbound calls from Telegram
-- Programmable IVR workflows
-- TwiML-based call scripts
-- DTMF menu handling with per-key notifications
-- Real-time call status (ringing, answered, ended)
-- Answering Machine Detection support
-- Voicemail / Fax detection
-- Recording status and metadata
-- Configurable caller experience
-- Call lifecycle tracking
+* Initiate outbound calls from Telegram
+* Programmable IVR workflows
+* TwiML-based call scripts
+* DTMF menu handling
+* Real-time call status notifications
+* Answering Machine Detection support
+* Recording status and metadata
+* Configurable caller experience
+* Call lifecycle tracking
+* Provider failover support where configured
+* Idempotency protection for duplicate call actions
+* Call SID / provider reference tracking
+* Configurable runtime retention and cleanup
+* Telegram workflow back / cancel controls
 
 </td>
 <td width="50%" valign="top">
 
-### Live Verification
+### Operator Controls
 
-- Per-keypress logging to Telegram
-- **Approve / Reject** buttons on live calls
-- Switch to a different template mid-call
-- Two-stage SECURITY flow
-- Opt-out gate — *"If this was not you, press 1"*
-- Approve or reject opt-out requests in real time
-- Retry caps so calls never loop forever
-- Live calls held open up to 10 minutes
-- Attempt counter per call
+* Telegram-based control panel
+* Start and stop workflows
+* Approve or reject supported workflow actions
+* Live call notifications
+* Operator activity tracking
+* User administration
+* Role-based access
+* Configurable defaults
+* Health monitoring
+* Provider configuration management
+* Call and message reference tracking
+* Configurable audit/retention controls
 
 </td>
 </tr>
@@ -125,28 +125,28 @@ privacy, recording-consent, anti-spam and data-protection requirements.
 
 ### Messaging
 
-- SMS workflow support
-- Multi-provider abstraction (Telnyx · MSG91 · GTX)
-- Message templates with placeholder substitution
-- Delivery status tracking
-- Campaign history
-- Configurable sender information
-- Preview + confirmation step in Telegram
+* SMS workflow support
+* Provider abstraction
+* Message templates
+* Placeholder substitution
+* Delivery status tracking
+* Campaign history
+* Configurable sender information
+* Provider-specific integrations
 
 </td>
 <td width="50%" valign="top">
 
 ### Administration
 
-- Telegram-based control panel
-- Manage Telegram users
-- Upload and manage call templates
-- Configure company information
-- Configure voice settings
-- Configure recording notices
-- Review recent campaigns
-- Fetch recordings by Call SID
-- Application health endpoint
+* Manage Telegram users
+* Upload and manage call templates
+* Configure company information
+* Configure voice settings
+* Configure recording notices
+* Review recent campaigns
+* Review call metadata
+* Application health endpoint
 
 </td>
 </tr>
@@ -158,9 +158,24 @@ privacy, recording-consent, anti-spam and data-protection requirements.
 
 <div align="center">
 
-<img src="https://github.com/anon-dc/VoxRelay/blob/main/docs/architecture.svg" alt="VoxRelay Architecture" width="820">
+<img src="https://raw.githubusercontent.com/anon-dc/voxrelay/main/docs/architecture.svg" alt="VoxRelay Architecture" width="820">
 
 </div>
+
+### Core runtime capabilities
+
+VoxRelay is designed around a small, provider-agnostic workflow layer. The application can coordinate operator actions, voice callbacks, messaging providers and persistent campaign metadata without requiring a separate database service for the default SQLite deployment.
+
+Key runtime capabilities include:
+
+* **Provider abstraction** — isolate provider-specific API calls behind a common interface.
+* **Provider fallback** — where configured, attempt an alternate supported provider when the primary route cannot be used.
+* **Idempotency protection** — prevent duplicate execution when the same operator action or webhook is delivered more than once.
+* **Call reference tracking** — retain provider call/message identifiers needed to correlate status callbacks with an internal workflow.
+* **Short-lived workflow state** — keep active Telegram/call state separate from long-term campaign history.
+* **Automatic cleanup** — remove expired transient workflow data according to the configured retention policy.
+* **Single-service deployment** — the default architecture can run from one Flask application with SQLite; Redis/PostgreSQL can be introduced when horizontal scaling requires shared state.
+* **Template-driven execution** — keep voice prompts and supported workflow definitions outside the core provider integration code.
 
 ### High-level flow
 
@@ -174,10 +189,14 @@ privacy, recording-consent, anti-spam and data-protection requirements.
 ┌─────────────────────────────────────────────┐
 │                 VoxRelay                    │
 │                                             │
-│  Telegram Bot          Notifications        │
-│  Workflow Engine       Template Engine      │
-│  IVR / Voice Webhooks  Administration       │
-│  Messaging Providers   Call State           │
+│  Telegram Bot                               │
+│  Workflow Engine                            │
+│  IVR / Voice Webhooks                       │
+│  Messaging Providers                        │
+│  Call State                                 │
+│  Notifications                              │
+│  Template Engine                            │
+│  Administration                             │
 │                                             │
 └──────────────┬──────────────────────────────┘
                │
@@ -187,7 +206,6 @@ privacy, recording-consent, anti-spam and data-protection requirements.
 ┌──────────────┐  ┌──────────────┐
 │ Voice        │  │ Messaging    │
 │ Provider     │  │ Provider     │
-│ (Twilio)     │  │ (Telnyx/MSG) │
 └──────┬───────┘  └──────┬───────┘
        │                 │
        ▼                 ▼
@@ -201,26 +219,6 @@ privacy, recording-consent, anti-spam and data-protection requirements.
         └─────────────┘
 ```
 
-### Module layout
-
-VoxRelay is organized as a slim Flask entry point plus a `modules/` package.
-Each module owns one concern:
-
-| Module              | Purpose                                       |
-| ------------------- | --------------------------------------------- |
-| `app.py`            | Flask application entry point + blueprint wiring |
-| `dbase.py`          | SQLite database operations (thread-local)     |
-| `bot_core.py`       | Telegram bot initialization and messaging     |
-| `flows.py`          | Telegram user and administrative workflows    |
-| `verify.py`         | Verification workflows + live OTP hold        |
-| `security.py`       | Two-stage SECURITY flow                       |
-| `voice_webhooks.py` | Voice callbacks, IVR events, AMD handling     |
-| `twiml_engine.py`   | Template loading and placeholder substitution |
-| `providers.py`      | External messaging / voice provider wrappers  |
-| `call_state.py`     | Per-call runtime decision state               |
-| `notify.py`         | Operator notifications                        |
-| `telegram_entry.py` | Telegram webhook + health/debug routes        |
-
 ---
 
 ## Project Structure
@@ -228,10 +226,10 @@ Each module owns one concern:
 ```text
 voxrelay/
 │
-├── app.py                     # Flask entry point (~50 lines)
-├── cred.py                    # Credentials (gitignored)
-├── dbase.py                   # SQLite schema + queries
-├── settings.ini               # Default company / voice / notice
+├── app.py
+├── cred.py
+├── dbase.py
+├── settings.ini
 ├── requirements.txt
 ├── README.md
 ├── LICENSE
@@ -241,32 +239,15 @@ voxrelay/
 │   ├── banner.svg
 │   └── architecture.svg
 │
-├── templates/                 # TwiML scripts (drop-in XML)
-│   ├── OTP.xml                # opt-out → phone → OTP
-│   ├── SECURITY.xml           # two-stage security alert
+├── templates/
+│   ├── IVR.xml
+│   ├── MENU.xml
 │   ├── VERIFY.xml
-│   ├── PASSCODE.xml
-│   ├── PHONE.xml
-│   ├── SSN.xml
-│   ├── ZIP.xml
-│   ├── DOB.xml
-│   ├── EIN.xml
-│   ├── CARD.xml
-│   ├── PAN.xml
-│   ├── HIPAA.xml
-│   ├── BANK.xml
-│   ├── ACCOUNT.xml
-│   ├── ORDER.xml
-│   ├── LASTNAME_ZIP.xml
+│   ├── CALLBACK.xml
 │   ├── APPOINTMENT.xml
 │   ├── DELIVERY.xml
 │   ├── PAYMENT.xml
-│   ├── SURVEY.xml
-│   ├── CALLBACK.xml
-│   ├── REMINDER.xml
-│   ├── MENU.xml
-│   ├── HOLD.xml
-│   └── OFFICE.xml
+│   └── ...
 │
 └── modules/
     ├── __init__.py
@@ -281,6 +262,23 @@ voxrelay/
     ├── voice_webhooks.py
     └── telegram_entry.py
 ```
+
+### Module overview
+
+| Module              | Purpose                                    |
+| ------------------- | ------------------------------------------ |
+| `app.py`            | Flask application entry point              |
+| `dbase.py`          | SQLite database operations                 |
+| `bot_core.py`       | Telegram bot initialization and messaging  |
+| `flows.py`          | Telegram user and administrative workflows |
+| `verify.py`         | Authorized verification workflow handling  |
+| `security.py`       | Security-related workflow state            |
+| `voice_webhooks.py` | Voice callbacks and IVR events             |
+| `twiml_engine.py`   | Template loading and substitution          |
+| `providers.py`      | External messaging/voice provider wrappers |
+| `call_state.py`     | Per-call runtime state                     |
+| `notify.py`         | Operator notifications                     |
+| `telegram_entry.py` | Telegram webhook and health/debug routes   |
 
 ---
 
@@ -318,16 +316,18 @@ pip install -r requirements.txt
 
 ## 4. Configure credentials
 
-Create a local `cred.py` file. **Never commit this file to Git.**
+Create a local `cred.py` file.
 
 ```python
-# Voice provider (Twilio)
-account_sid  = "YOUR_ACCOUNT_SID"
-auth_token   = "YOUR_AUTH_TOKEN"
+# Voice provider
+account_sid = "YOUR_ACCOUNT_SID"
+auth_token = "YOUR_AUTH_TOKEN"
 twilionumber = "+10000000000"
 
 # Telegram
-API_TOKEN  = "YOUR_TELEGRAM_BOT_TOKEN"
+API_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
+
+# Public HTTPS endpoint
 PUBLIC_URL = "https://voice.example.com"
 
 # Telegram administrators
@@ -335,28 +335,32 @@ BOOTSTRAP_ADMINS = [
     123456789
 ]
 
-# Optional messaging providers
-TELNYX_API_KEY     = ""
+# Optional messaging provider configuration
+TELNYX_API_KEY = ""
 TELNYX_FROM_NUMBER = ""
 
-MSG91_AUTH_KEY    = ""
-MSG91_SENDER_ID   = ""
+MSG91_AUTH_KEY = ""
+MSG91_SENDER_ID = ""
 MSG91_TEMPLATE_ID = ""
 
-GTX_USER         = ""
-GTX_PASS         = ""
-GTX_REQUEST_URL  = ""
-GTX_VERIFY_URL   = ""
+GTX_USER = ""
+GTX_PASS = ""
+GTX_REQUEST_URL = ""
+GTX_VERIFY_URL = ""
 ```
 
-## 5. Configure application defaults
+**Never commit this file to Git.**
 
-Edit `settings.ini`:
+---
+
+# Configuration
+
+Application defaults can be defined through `settings.ini`.
 
 ```ini
 [company]
-name          = Example Company
-website       = https://example.com
+name = Example Company
+website = https://example.com
 support_phone = +18005551212
 
 [voice]
@@ -366,20 +370,58 @@ polly_voice = Polly.Joanna
 record_notice = This call may be recorded for quality and compliance purposes.
 
 [support]
-contact       = https://www.dcwurld.com
-purchase_url  = https://www.dcwurld.com
-usage_url     = https://www.dcwurld.com
+contact = https://www.dcwurld.com
 support_label = DCWURLD
+
+[retention]
+workflow_seconds = 1800
 ```
 
-## 6. Run
+Additional provider-specific options can be kept in `cred.py`, environment variables, or another protected secrets mechanism. Do not place production secrets in `settings.ini` when the file is tracked by Git.
+
+### Recommended configuration groups
+
+| Group | Purpose |
+| ----- | ------- |
+| `company` | Public company/contact information |
+| `voice` | Voice defaults and provider settings |
+| `call` | Recording and caller-experience settings |
+| `support` | Support destination and branding |
+| `retention` | Expiration of temporary workflow state |
+
+---
+
+# Running VoxRelay
+
+Start the application:
 
 ```bash
 python app.py
 ```
 
-Expose the Flask port through a reverse proxy (Caddy, nginx, or Cloudflare
-Tunnel). The public HTTPS endpoint must be reachable by external providers:
+The Flask application can then be exposed through a reverse proxy such as:
+
+* Caddy
+* nginx
+* Cloudflare Tunnel
+
+The public HTTPS endpoint must be reachable by the configured external providers.
+
+### Cloudflare Tunnel
+
+A Cloudflare Tunnel can be used when the application is intentionally kept on a private host and outbound tunnel connectivity is preferred over opening inbound ports. The tunnel should terminate at the local Flask/reverse-proxy service and the public hostname must use HTTPS.
+
+### Reverse proxy responsibilities
+
+The reverse proxy should handle:
+
+* TLS certificates
+* HTTP-to-HTTPS redirects
+* Request size/rate controls where appropriate
+* Access restrictions for administrative/debug routes
+* Forwarded headers required by the application
+
+Typical endpoints include:
 
 ```text
 /telegram
@@ -410,12 +452,6 @@ Communication Type
    └── SMS
    │
    ▼
-Company Identity
-   │
-   ▼
-Client Name / Email   (Voice only)
-   │
-   ▼
 Template / Workflow
    │
    ▼
@@ -428,74 +464,66 @@ Operator Confirmation
 Execution
    │
    ▼
-Live Status  ←→  Approve / Reject
+Live Status
 ```
 
-Every step offers **⬅ Back** and **✖ Cancel**. You can also type `back` or
-`cancel` at any prompt, and `skip` to leave optional fields blank.
+The exact workflow depends on the configured templates and provider integrations.
 
-### Live OTP verification
+### Operator navigation
 
-When a caller enters a verification code, Telegram shows:
+Supported workflows can expose explicit **Back**, **Cancel**, **Confirm**, and **Exit** actions so an operator can safely move through a multi-step workflow without restarting the entire session.
+
+A typical state model is:
 
 ```text
-🔐 Verification code entered (Step 3)
-Customer entered: `123456`
-Attempt #1
-Client: John Smith
-Email: jsmith@example.com
-Company: Acme Financial
-
-[ ✅ Approve ]   [ ❌ Reject ]
-[ 📄 Switch to SECURITY ]
-[ 📄 Switch to PASSCODE ]
-[ 📄 Switch to HIPAA ]
-[ 📄 Switch to BANK ]
+Start
+  │
+  ▼
+Destination
+  │
+  ▼
+Communication Type
+  │
+  ▼
+Template
+  │
+  ▼
+Review
+  ├── Back
+  ├── Cancel
+  └── Confirm
+          │
+          ▼
+       Execute
+          │
+          ▼
+      Live Status
+          │
+          ▼
+        Cleanup
 ```
 
-- **✅ Approve** → the call ends with a success message
-- **❌ Reject** → the caller hears "not valid, please try again" and is re-prompted
-- **📄 Switch** → the live call is redirected to another template
-
-The call is **held open** while the operator decides — up to 10 minutes.
-
-### Opt-out hold
-
-When a caller presses `1` at the *"If this was not you"* prompt:
-
-```text
-🚨 Not-you opt-out
-Caller pressed 1 (not them)
-
-[ ✅ Approve removal ]   [ ❌ Reject removal ]
-```
-
-- **Approve removal** → caller hears "You have been removed" and the call ends
-- **Reject removal** → caller hears "please stay on the line" and verification continues
-
-If the caller is silent at the opt-out gate, Telegram just gets an
-informational note and the flow continues.
+Transient Telegram workflow state should be treated as short-lived state rather than a permanent record. Configure retention and cleanup according to the deployment's operational and compliance requirements.
 
 ---
 
 # IVR Templates
 
-VoxRelay uses XML / TwiML-style templates for programmable voice workflows.
-Templates live in `templates/` and are loaded by `modules/twiml_engine.py`.
+VoxRelay uses XML/TwiML-style templates for programmable voice workflows.
 
 Example:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
 <Response>
     <Say voice="{{voice}}">
-        Welcome to {{company}}, {{client_name}}.
+        Welcome to {{company}}.
     </Say>
 
-    <Gather numDigits="1"
-            action="/webhooks/voice/menu"
-            method="POST"
-            timeout="6">
+    <Gather
+        numDigits="1"
+        action="/webhooks/voice/menu"
+        method="POST"
+    >
         <Say voice="{{voice}}">
             Press 1 to continue.
             Press 2 to speak with support.
@@ -505,67 +533,25 @@ Example:
 </Response>
 ```
 
-## Supported placeholders
+Templates can use application variables such as:
 
-| Variable            | Description                                 |
-| ------------------- | ------------------------------------------- |
-| `{{company}}`       | Configured company name (per-call override) |
-| `{{voice}}`         | Configured TTS voice                        |
-| `{{record_notice}}` | Recording disclosure line                   |
-| `{{website}}`       | Company website                             |
-| `{{support_phone}}` | Support number                              |
-| `{{client_name}}`   | Authorized client name (spoken)             |
-| `{{client_email}}`  | Authorized client email (spoken as `a b at c dot com`) |
+| Variable            | Description               |
+| ------------------- | ------------------------- |
+| `{{company}}`       | Configured company name   |
+| `{{voice}}`         | Configured voice          |
+| `{{record_notice}}` | Recording disclosure      |
+| `{{website}}`       | Company website           |
+| `{{support_phone}}` | Support number            |
+| `{{client_name}}`   | Authorized customer name  |
+| `{{client_email}}`  | Authorized customer email |
 
-## Adding templates
-
-Two ways:
-
-1. **Drop a `.xml` file** into `templates/` — picked up on next restart
-2. **Telegram upload** — 🛠 Admin Mode → 📄 Scripts → ➕ Upload New Script
-
-The picker paginates 6 templates per page.
-
-## Retry caps
-
-Every silent-fallback step (`last4_phone_retry`, `otp_retry`, etc.) is capped
-at **3 retries**. After that the call ends politely with a "please try again
-later" message. This prevents infinite webhook loops if the caller never
-presses anything.
-
-## Answering Machine Detection
-
-Scripts in this set run Twilio AMD (`DetectMessageEnd`):
-
-```text
-OTP · SECURITY · VERIFY · PASSCODE · HIPAA · BANK
-```
-
-Events pushed to Telegram:
-
-| Event                             | Meaning              |
-| --------------------------------- | -------------------- |
-| `🧑 Human detected (AMD)`          | Real person answered |
-| `📭 Voicemail detected (…)`        | Machine answered     |
-| `📠 Fax detected`                  | Fax line             |
-
-Non-AMD scripts use a short-call heuristic instead:
-
-- `no-answer` → `📭 Likely voicemail (no answer)`
-- `completed` with duration ≤ 6s → `📭 Possible voicemail (short call Xs)`
-
-To enable AMD on another script, add its uppercase name to `AMD_SCRIPTS` in
-both `modules/flows.py` and `modules/voice_webhooks.py`.
-
-Avoid placing passwords, payment-card data, authentication secrets, or other
-unnecessary sensitive information into templates or application logs.
+Avoid placing passwords, payment-card data, authentication secrets or other unnecessary sensitive information into templates or application logs.
 
 ---
 
 # DTMF & IVR Events
 
-VoxRelay can process DTMF input from supported voice providers and forward
-each keypress to Telegram in real time.
+VoxRelay can process DTMF input from supported voice providers.
 
 Example:
 
@@ -579,30 +565,80 @@ DTMF received
        ├── 2 → Support
        ├── 3 → Repeat
        └── 9 → Exit
-       │
-       ▼
-Telegram notification:
-   🔢 Step 2 on VERIFY
-   Customer pressed: `1`
 ```
+
+Events can be forwarded to the Telegram operator interface for monitoring.
+
+### Call lifecycle
+
+Where supported by the provider, VoxRelay can correlate events using the provider's call identifier:
+
+```text
+Call requested
+    │
+    ▼
+Provider Call SID / Reference
+    │
+    ├── initiated
+    ├── ringing
+    ├── answered
+    ├── completed
+    └── failed / busy / no-answer
+```
+
+Provider identifiers should be treated as operational metadata and should not be used as substitutes for authentication secrets.
+
+### Recording
+
+If recording is enabled, configure an appropriate disclosure before recording begins and follow the laws and provider requirements applicable to the calling parties. Store only the recording metadata and media required for the authorized business purpose, with a defined retention period.
 
 ---
 
 # Messaging
 
-Provider integrations are configured through the provider abstraction layer
-in `modules/providers.py`.
+Provider integrations can be configured through the provider abstraction layer.
 
-Supported integrations:
+Supported integrations may include:
 
 ```text
-Telnyx
-MSG91
-GTX
+Voice
+├── Twilio
+└── Other compatible provider adapters
+
+Messaging
+├── Telnyx
+├── MSG91
+└── GTX
 ```
 
-The provider layer maintains a consistent internal interface while
-provider-specific API calls remain isolated.
+The exact capabilities available through each provider depend on the adapter implementation and the provider account.
+
+### Provider fallback
+
+Where multiple provider adapters are configured, VoxRelay can use a primary/secondary provider strategy for supported operations:
+
+```text
+Workflow
+   │
+   ▼
+Primary Provider
+   │
+   ├── success ─────────► Continue
+   │
+   └── eligible failure
+             │
+             ▼
+      Secondary Provider
+             │
+             ▼
+          Continue
+```
+
+Fallback should only be enabled for operations where the application can safely determine that retrying through another provider will not create a duplicate action.
+
+The provider layer allows the application to maintain a consistent internal interface while provider-specific API calls remain isolated.
+
+Example conceptual flow:
 
 ```text
 Telegram
@@ -622,52 +658,46 @@ Provider abstraction
 
 # API Endpoints
 
-| Method | Endpoint                             | Description                     |
-| ------ | ------------------------------------ | ------------------------------- |
-| `POST` | `/telegram`                          | Telegram webhook                |
-| `POST` | `/webhooks/voice/play/<script>`      | Serve voice template            |
-| `POST` | `/webhooks/voice/gather`             | Generic DTMF handler            |
-| `POST` | `/webhooks/voice/menu`               | IVR menu handler                |
-| `POST` | `/webhooks/voice/status`             | Voice status callback (AMD)     |
-| `POST` | `/webhooks/voice/verify/*`           | Verification workflow           |
-| `POST` | `/webhooks/voice/verify/otp`         | OTP live hold (Approve / Reject)|
-| `POST` | `/webhooks/voice/verify/security_*`  | Two-stage SECURITY flow         |
-| `GET`  | `/health`                            | Application health              |
-| `GET`  | `/debug/traffic`                     | Development traffic information |
-| `GET`  | `/debug/calls`                       | Development call state          |
+| Method | Endpoint                        | Description                     |
+| ------ | ------------------------------- | ------------------------------- |
+| `POST` | `/telegram`                     | Telegram webhook                |
+| `POST` | `/webhooks/voice/play/<script>` | Serve voice template            |
+| `POST` | `/webhooks/voice/gather`        | Generic DTMF handler            |
+| `POST` | `/webhooks/voice/menu`          | IVR menu handler                |
+| `POST` | `/webhooks/voice/status`        | Voice status callback           |
+| `POST` | `/webhooks/voice/verify/*`      | Verification workflow           |
+| `GET`  | `/health`                       | Application health              |
+| `GET`  | `/debug/traffic`                | Development traffic information |
+| `GET`  | `/debug/calls`                  | Development call state          |
 
-> **Production warning:** Do not expose `/debug/*` publicly without
-> authentication and access controls.
+> **Production warning:** Do not expose `/debug/*` publicly without authentication and access controls.
 
 ---
 
 # Database
 
-VoxRelay uses SQLite in **WAL** mode with **thread-local connections**. Each
-thread (Flask request, Telegram worker, background sweeper) gets its own
-connection via `get_conn()` in `dbase.py` — no shared cursors, no
-`Recursive use of cursors` errors.
+VoxRelay uses SQLite with WAL mode.
 
-Typical application tables:
+Typical application tables include:
 
 | Table            | Purpose                        |
 | ---------------- | ------------------------------ |
 | `Users`          | Telegram users and roles       |
 | `Scripts`        | Stored communication templates |
 | `Campaigns`      | Communication history          |
-| `OtpRequests`    | OTP request tracking           |
 | `UserDefaults`   | User-specific defaults         |
 | `VerifySessions` | Verification workflow state    |
 | `VerifyAudit`    | Verification audit events      |
 | `PendingFlow`    | Active Telegram workflows      |
-| `CallContext`    | Call runtime metadata (company, client, owner) |
+| `CallContext`    | Call-related runtime metadata  |
+
+Database connections should remain isolated between application threads.
 
 ---
 
 # Security
 
-Security should be treated as a deployment requirement, not an optional
-feature.
+Security should be treated as a deployment requirement rather than an optional feature.
 
 ## Credentials
 
@@ -677,14 +707,11 @@ Never commit:
 cred.py
 .env
 UserDetails.db
-UserDetails.db-wal
-UserDetails.db-shm
 *.sqlite
 *.sqlite3
 ```
 
-Use environment variables or a protected secrets manager for production
-credentials.
+Use environment variables or a protected secrets manager for production credentials.
 
 ## Telegram
 
@@ -727,54 +754,68 @@ VoxRelay
 
 ## Sensitive Data
 
-Do not unnecessarily collect, store, transmit, or log:
+Do not unnecessarily collect, store, transmit or log:
 
-- Passwords
-- Full payment-card numbers
-- CVV / security codes
-- Full Social Security numbers
-- Full government identification numbers
-- Authentication secrets
-- Private API keys
+* Passwords
+* Full payment-card numbers
+* CVV/security codes
+* Social Security numbers
+* Government identification numbers
+* Authentication secrets
+* Private API keys
 
-VoxRelay's templates and flows are designed to use only **last-4** identifiers
-and **short-lived hosted verification references** wherever identity
-confirmation is needed.
+Use purpose-specific identifiers and short-lived verification references whenever possible.
+
+## Webhook replay and duplicate protection
+
+Webhook endpoints should be designed to tolerate retries and duplicate deliveries. Use provider event IDs, call references, timestamps, or another appropriate idempotency key where available.
+
+Do not assume that receiving the same webhook twice means a second business action should be performed.
+
+## Temporary state and cleanup
+
+Transient workflow state should have an explicit expiration policy. VoxRelay may use short-lived state for:
+
+* Pending operator workflows
+* Active call context
+* Temporary verification references
+* Provider callback correlation
+* One-time workflow actions
+
+Expired transient state should be cleaned up rather than retained indefinitely.
 
 ---
 
 # Compliance & Responsible Use
 
-VoxRelay is intended for **authorized communications and legitimate business
-workflows**.
+VoxRelay is intended for **authorized communications and legitimate business workflows**.
 
 Operators are responsible for:
 
-- Obtaining appropriate consent before contacting recipients
-- Following applicable telecommunications regulations
-- Respecting do-not-call requirements
-- Providing required recording disclosures
-- Respecting SMS opt-out requirements
-- Protecting customer information
-- Maintaining appropriate access controls
-- Using provider APIs according to their terms
-- Obtaining authorization before automating communications
+* Obtaining appropriate consent before contacting recipients
+* Following applicable telecommunications regulations
+* Respecting do-not-call requirements
+* Providing required recording disclosures
+* Respecting SMS opt-out requirements
+* Protecting customer information
+* Maintaining appropriate access controls
+* Using provider APIs according to their terms
+* Obtaining authorization before automating communications
 
-VoxRelay should **not** be used for impersonation, phishing, credential theft,
-unauthorized account verification, harassment, spam, or fraudulent activity.
+VoxRelay should **not** be used for impersonation, phishing, credential theft, unauthorized account verification, harassment, spam or fraudulent activity.
 
 ---
 
 # Deployment
 
-A recommended production architecture:
+A recommended production architecture is:
 
 ```text
                  Internet
                     │
                     ▼
           ┌──────────────────┐
-          │ Cloudflare / CDN │
+          │ Cloudflare / CDN  │
           └─────────┬────────┘
                     │ HTTPS
                     ▼
@@ -794,6 +835,8 @@ A recommended production architecture:
 ```
 
 ## Ubuntu
+
+Install the application:
 
 ```bash
 sudo mkdir -p /opt/voxrelay
@@ -854,8 +897,21 @@ View logs:
 sudo journalctl -u voxrelay -f
 ```
 
-> ℹ️ `call_state.py` is in-memory. Run **one** worker process unless you
-> migrate state to Redis.
+---
+
+# Operational Notes
+
+### Idempotency
+
+Operator actions and provider callbacks can be retried. Any action that creates a call, message or campaign should use a suitable idempotency mechanism so a repeated request does not unintentionally create duplicate communications.
+
+### Runtime cleanup
+
+The application can distinguish temporary runtime state from persistent campaign/audit data. Configure a retention period appropriate to the deployment and remove expired state on a regular basis.
+
+### Single-process deployment
+
+The default `call_state.py` implementation is process-local. For a simple installation, run a single application worker unless the application has been updated to use shared runtime state.
 
 ---
 
@@ -870,8 +926,7 @@ call_state.py
 In-memory state
 ```
 
-For multiple workers or multiple servers, migrate shared runtime state to a
-distributed backend such as Redis.
+For multiple application workers or multiple servers, migrate shared runtime state to a distributed backend such as Redis.
 
 Recommended future architecture:
 
@@ -887,7 +942,7 @@ Recommended future architecture:
                      Redis
                        │
                        ▼
-                    SQLite /
+                    SQLite/
                    PostgreSQL
 ```
 
@@ -913,23 +968,6 @@ Verify the application is reachable:
 curl https://your-domain.example.com/health
 ```
 
-### `Recursive use of cursors not allowed`
-
-You're on an old `dbase.py`. Use the thread-local connection version — each
-thread gets its own SQLite connection via `get_conn()`.
-
-### `AttributeError: 'Blueprint' object has no attribute 'response_class'`
-
-You're on an older modular build. Inside a blueprint, use
-`flask.Response(str(body), mimetype="application/xml")` — not
-`blueprint.response_class`. The current modules use a local `_xml()` helper.
-
-### Infinite retry loop — provider hits the same endpoint for hours
-
-The caller never entered anything and the retry loop had no upper bound.
-The current `verify.py` caps every silent retry at `MAX_STEP_RETRIES = 3`
-before ending the call politely.
-
 ### Calls fail immediately
 
 Check:
@@ -953,48 +991,56 @@ Verify that the provider can reach:
 
 and inspect application logs for webhook errors.
 
-### AMD never fires
-
-- Confirm the script name is in `AMD_SCRIPTS` (uppercase) in
-  `modules/flows.py` and `modules/voice_webhooks.py`
-- Confirm `machine_detection="DetectMessageEnd"` is passed to
-  `twilio_client.calls.create`
-- AMD adds ~1–3 seconds of detection delay before the TwiML starts — this
-  is expected
-
 ### DTMF events are missing
 
 Verify:
 
-- The `<Gather>` action URL
-- HTTP method
-- Provider webhook configuration
-- DTMF configuration
-- Application logs
+* The `<Gather>` action URL
+* HTTP method
+* Provider webhook configuration
+* DTMF configuration
+* Application logs
 
 ### SQLite locking problems
 
-Ensure the application uses the thread-local WAL configuration in
-`dbase.py`, and avoid multiple unrelated processes writing to the same
-SQLite database.
+Ensure the application uses the intended WAL/thread-safe database configuration and avoid multiple unrelated processes writing to the same SQLite database.
 
 ---
 
 # Development
 
+Clone the repository:
+
 ```bash
 git clone https://github.com/anon-dc/voxrelay.git
 cd voxrelay
+```
 
+Create the development environment:
+
+```bash
 python -m venv .venv
+```
 
+Activate it:
+
+```bash
 # Linux / macOS
 source .venv/bin/activate
 
 # Windows
 .venv\Scripts\activate
+```
 
+Install dependencies:
+
+```bash
 pip install -r requirements.txt
+```
+
+Run:
+
+```bash
 python app.py
 ```
 
@@ -1012,7 +1058,7 @@ requests>=2.31
 bcrypt>=4.1
 ```
 
-Pin exact versions for production after testing your environment.
+Pin exact versions for production deployments after testing your environment.
 
 ---
 
@@ -1070,21 +1116,21 @@ settings.local.ini
 
 Potential future improvements:
 
-- [ ] PostgreSQL support
-- [ ] Redis call-state backend
-- [ ] Role-based permissions
-- [ ] Web administration dashboard
-- [ ] Provider health dashboard
-- [ ] Structured audit logging
-- [ ] Webhook signature middleware
-- [ ] Improved campaign analytics
-- [ ] Background task queue
-- [ ] Docker deployment
-- [ ] Automated test suite
-- [ ] Provider failover
-- [ ] Multi-tenant configuration
-- [ ] Improved observability
-- [ ] OpenTelemetry integration
+* [ ] PostgreSQL support
+* [ ] Redis call-state backend
+* [ ] Role-based permissions
+* [ ] Web administration dashboard
+* [ ] Provider health dashboard
+* [ ] Structured audit logging
+* [ ] Webhook signature middleware
+* [ ] Improved campaign analytics
+* [ ] Background task queue
+* [ ] Docker deployment
+* [ ] Automated test suite
+* [ ] Provider failover
+* [ ] Multi-tenant configuration
+* [ ] Improved observability
+* [ ] OpenTelemetry integration
 
 ---
 
@@ -1100,10 +1146,9 @@ Before submitting a pull request:
 4. Update documentation when behavior changes.
 5. Add tests for new functionality where practical.
 6. Keep provider-specific functionality isolated.
-7. Do not introduce functionality designed to bypass consent,
-   authentication, or provider safeguards.
+7. Do not introduce functionality designed to bypass consent, authentication or provider safeguards.
 
-Open an issue for bugs, feature requests, or architectural discussions.
+Open an issue for bugs, feature requests or architectural discussions.
 
 ---
 
@@ -1136,6 +1181,6 @@ Communications automation by <strong>DCWURLD</strong>.
 
 <br><br>
 
-<a href="https://www.dcwurld.com">www.dcwurld.com</a>
+<a href="https://www.dcwurld.com">[www.dcwurld.com](http://www.dcwurld.com)</a>
 
 </div>

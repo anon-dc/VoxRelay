@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    {{record_notice}}
+    This is an automated call from {{company}}.
+    To verify your identity, please enter your six digit account passcode,
+    followed by the pound key. Do not say your passcode out loud.
+  </Say>
+  <Gather numDigits="6" finishOnKey="#" action="/webhooks/voice/verify/passcode" timeout="15">
+    <Say voice="{{voice}}">Please enter your passcode now.</Say>
+  </Gather>
+  <Redirect method="POST">/webhooks/voice/verify/passcode_retry</Redirect>
+</Response>

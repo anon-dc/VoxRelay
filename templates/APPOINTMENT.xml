@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    {{record_notice}}
+    Hello, this is an automated reminder from {{company}}.
+    You have an appointment scheduled for tomorrow at 3 PM with Doctor Smith.
+  </Say>
+  <Gather numDigits="1" action="/webhooks/voice/gather?flow=appointment_confirm" timeout="6">
+    <Say voice="{{voice}}">
+      Press 1 to confirm your appointment.
+      Press 2 to reschedule.
+      Press 3 to cancel.
+    </Say>
+  </Gather>
+  <Say voice="{{voice}}">
+    We did not receive any input. Please call our office to confirm. Goodbye.
+  </Say>
+</Response>

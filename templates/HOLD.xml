@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    Thank you for calling {{company}}.
+    All of our representatives are currently assisting other callers.
+    Your call is important to us. Please hold and the next available
+    representative will be with you shortly.
+    To leave a voicemail instead, press 1.
+    To hear our business hours, press 2.
+  </Say>
+  <Gather numDigits="1" action="/webhooks/voice/menu?flow=hold_message" timeout="8">
+    <Say voice="{{voice}}">Press 1 for voicemail, or 2 for business hours.</Say>
+  </Gather>
+  <Say voice="{{voice}}">
+    We are still assisting other callers. Please continue to hold. Thank you.
+  </Say>
+  <Redirect>/webhooks/voice/play/HOLD</Redirect>
+</Response>

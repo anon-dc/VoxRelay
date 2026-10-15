@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+
+  <!-- Security alert gate. Caller presses 1 if it wasn't them. -->
+  <Gather numDigits="1" action="/webhooks/voice/verify/security_alert" timeout="8">
+    <Say voice="{{voice}}">
+      {{record_notice}}
+      This is an automated security call from {{company}} for {{client_name}}.
+      Someone is trying to gain access to the email on file for your account.
+      If this was you, please stay on the line.
+      If you know this was not you, press 1 now.
+    </Say>
+  </Gather>
+
+  <Redirect method="POST">/webhooks/voice/verify/security_alert_retry</Redirect>
+
+</Response>

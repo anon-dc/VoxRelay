@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    {{record_notice}}
+    Hello, this is an automated message from {{company}}.
+    Your package is scheduled for delivery tomorrow between 10 AM and 2 PM.
+    Please ensure someone is available to receive it, or leave instructions
+    for the driver at your front door.
+  </Say>
+  <Gather numDigits="1" action="/webhooks/voice/menu?flow=delivery_notice" timeout="5">
+    <Say voice="{{voice}}">
+      Press 1 to receive a text message with tracking details.
+      Press 2 to reschedule the delivery.
+    </Say>
+  </Gather>
+  <Say voice="{{voice}}">Thank you. Goodbye.</Say>
+</Response>

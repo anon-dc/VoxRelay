@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    {{record_notice}}
+    This is a reminder from {{company}} about your appointment tomorrow at 3 PM.
+  </Say>
+  <Gather numDigits="1" action="/webhooks/voice/menu" timeout="5">
+    <Say voice="{{voice}}">Press 1 to confirm. Press 2 to reschedule.</Say>
+  </Gather>
+  <Say voice="{{voice}}">We did not receive any input. Goodbye.</Say>
+</Response>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    {{record_notice}}
+    This is an automated call from {{company}}.
+    To verify your identity, please enter your date of birth in the format
+    month month day day year year year year, followed by the pound key.
+    For example, zero one, one five, one nine eight five, pound.
+  </Say>
+  <Gather numDigits="8" finishOnKey="#" action="/webhooks/voice/verify/dob" timeout="15">
+    <Say voice="{{voice}}">Please enter your date of birth now.</Say>
+  </Gather>
+  <Say voice="{{voice}}">We did not receive your input. Goodbye.</Say>
+</Response>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    Thank you for calling {{company}}.
+    Our office is currently closed.
+    Our regular business hours are Monday through Friday, 9 AM to 5 PM Eastern Time.
+    Please call back during business hours. Goodbye.
+  </Say>
+</Response>

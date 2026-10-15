@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    {{record_notice}}
+    Hello, this is {{company}} following up on your recent inquiry.
+    If you would like a representative to call you back, please press 1.
+    If your issue has been resolved, press 2.
+  </Say>
+  <Gather numDigits="1" action="/webhooks/voice/menu?flow=callback_request" timeout="6">
+    <Say voice="{{voice}}">Press 1 for a callback, or 2 if resolved.</Say>
+  </Gather>
+  <Say voice="{{voice}}">Thank you. Goodbye.</Say>
+</Response>

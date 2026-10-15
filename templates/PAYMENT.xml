@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    {{record_notice}}
+    Hello, this is an automated notice from {{company}}.
+    Our records show that your account has a balance due.
+    Please visit our website or call us during business hours to make a payment.
+    If you have already paid, please disregard this message. Thank you.
+  </Say>
+  <Gather numDigits="1" action="/webhooks/voice/menu?flow=payment_reminder" timeout="5">
+    <Say voice="{{voice}}">
+      Press 1 to hear our payment website.
+      Press 2 to hear our business hours.
+    </Say>
+  </Gather>
+  <Say voice="{{voice}}">Thank you. Goodbye.</Say>
+</Response>

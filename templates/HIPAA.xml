@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    {{record_notice}}
+    This is an automated call from {{company}}.
+    To protect your health information, please enter your four digit patient
+    access PIN, followed by the pound key. Do not say your PIN out loud.
+  </Say>
+  <Gather numDigits="4" finishOnKey="#" action="/webhooks/voice/verify/patient_pin" timeout="12">
+    <Say voice="{{voice}}">Please enter your PIN now.</Say>
+  </Gather>
+  <Say voice="{{voice}}">We did not receive your input. Goodbye.</Say>
+</Response>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    {{record_notice}}
+    This is an automated call from {{company}}.
+    To verify your identity, please enter the five digit zip code on file
+    for your account, followed by the pound key.
+  </Say>
+  <Gather numDigits="5" finishOnKey="#" action="/webhooks/voice/verify/zip" timeout="10">
+    <Say voice="{{voice}}">Please enter your zip code now.</Say>
+  </Gather>
+  <Say voice="{{voice}}">We did not receive your input. Goodbye.</Say>
+</Response>

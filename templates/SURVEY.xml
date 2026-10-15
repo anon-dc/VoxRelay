@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    {{record_notice}}
+    Thank you for choosing {{company}}. We would like your feedback.
+    On a scale of 1 to 5, where 5 is excellent, how satisfied are you
+    with your recent service?
+  </Say>
+  <Gather numDigits="1" action="/webhooks/voice/menu?flow=survey" timeout="6">
+    <Say voice="{{voice}}">Please press a number from 1 to 5 now.</Say>
+  </Gather>
+  <Say voice="{{voice}}">We did not receive your rating. Thank you. Goodbye.</Say>
+</Response>

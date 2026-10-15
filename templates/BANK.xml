@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say voice="{{voice}}">
+    {{record_notice}}
+    This is an automated call from {{company}}.
+    We will verify your identity in three steps.
+    First, please say your last name after the tone.
+  </Say>
+  <Gather finishOnKey="#" action="/webhooks/voice/verify/kba_name" timeout="10"
+          input="speech" speechTimeout="auto">
+    <Say voice="{{voice}}">Please say your last name now.</Say>
+  </Gather>
+</Response>
