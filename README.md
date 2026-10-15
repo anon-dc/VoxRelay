@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/anon-dc/voxrelay/main/docs/banner.svg" alt="VoxRelay" width="820">
+<img src="https://raw.githubusercontent.com/anon-dc/VoxRelay/main/docs/banner.svg" alt="VoxRelay" width="820">
 
 <br><br>
 
@@ -158,7 +158,7 @@ VoxRelay is designed for **authorized, consent-based communications**. Operators
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/anon-dc/voxrelay/main/docs/architecture.svg" alt="VoxRelay Architecture" width="820">
+<img src="https://raw.githubusercontent.com/anon-dc/voxrelay/main/docs/DC Community Storyboard Infographic.png" alt="VoxRelay Architecture" width="820">
 
 </div>
 
